@@ -49,4 +49,21 @@ describe('Genre.Controller', () => {
       expect(genres).toBe(expectedGenre);
     });
   });
+
+  describe('get.method - get a genre', () => {
+    it.skip('should throw error if genre not found', async () => {
+      Genre.findOne = jest.fn().mockResolvedValue(null);
+      const genre = await GenreController.get({ _id: '1234' });
+      expect(genre).toThrow();
+    });
+
+    it('should get a genre by key value pair', async () => {
+      const expectedGenre = { _id: '1234', name: 'abc' };
+
+      Genre.findOne = jest.fn().mockResolvedValue(expectedGenre);
+      const genre = await GenreController.get({ _id: '1234' });
+
+      expect(genre).toBe(expectedGenre);
+    });
+  });
 });
