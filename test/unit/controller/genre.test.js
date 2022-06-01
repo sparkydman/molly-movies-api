@@ -5,7 +5,7 @@ describe('Genre.Controller', () => {
   it('should have Genre contorller', () => {
     expect(Genre).toBeDefined();
   });
-  describe('Genre.create - create a genre', () => {
+  describe('create.method - create a genre', () => {
     it('should throw error if the genre name is less than 3 characters', () => {
       const genre = new GenreController('ab');
 
@@ -39,5 +39,14 @@ describe('Genre.Controller', () => {
     });
   });
 
-  
+  describe('getAll.method - get all genres', () => {
+    it('should get all the saved genres', () => {
+      const expectedGenre = [{ _id: '1234', name: 'abc' }];
+
+      Genre.find = jest.fn().mockReturnValue(expectedGenre);
+      const genres = GenreController.getAll();
+
+      expect(genres).toBe(expectedGenre);
+    });
+  });
 });

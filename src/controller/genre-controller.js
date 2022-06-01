@@ -17,4 +17,7 @@ module.exports = class GenreController {
     if (validateGenre.error) throw new Error(validateGenre.error.details[0]);
     return Genre.create(validateGenre.value);
   }
+  static getAll() {
+    return Genre.find();
+  }
 };
