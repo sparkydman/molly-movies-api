@@ -9,14 +9,10 @@ const ErrorResponse = require('../utils/Error-response');
 // -> update(name):{genre}
 // -> delete(id):string
 module.exports = class GenreController {
-  constructor(name) {
-    this.name = name;
-  }
-
   static async create({ body }) {
     const validateGenre = validate({ name: body.name });
     if (validateGenre.error)
-      throw new ErrorResponse(400, validateGenre.error.details[0]);
+      return { body: { error: validateGenre.error.details[0].message } };
 
     const newGenre = await Genre.create(validateGenre.value);
     return { status: 201, body: newGenre };
@@ -25,9 +21,10 @@ module.exports = class GenreController {
     const genres = await Genre.find();
     return { status: 200, body: genres };
   }
-  static async get(obj) {
-    const genre = await Genre.findOne(obj);
-    if (!genre) throw new ErrorResponse(404, 'Genre not found');
-    return genre;
+  static async get({ params }) {
+    const genre = await Genre.findOne({ _id: params.genreId });
+    if (!genre) return { status: 404, body: { error: 'Genre not found' } };
+
+    return { status: 200, body: genre };
   }
 };

@@ -1,3 +1,4 @@
+require('express-async-errors')
 const winston = require('winston');
 const config = require('config');
 

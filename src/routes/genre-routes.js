@@ -1,6 +1,7 @@
 const express = require('express');
 const expressWrapper = require('../helper/express-wrapper');
-const Controller = require('../controller/genre-controller')
+const Controller = require('../controller/genre-controller');
+const objectIdValidation = require('../middleware/object-id-validation');
 
 const router = express.Router();
 
@@ -11,9 +12,7 @@ router
 
 router
   .route('/:genreId')
-  .get((req, res) => {
-    res.send('get genre');
-  })
+  .get(objectIdValidation('genreId'), expressWrapper(Controller.get))
   .put((req, res) => {
     res.send('update genre');
   })
