@@ -1,6 +1,9 @@
 const GenreController = require('../../../src/controller/genre-controller');
 const { Genre } = require('../../../src/model/genre');
 
+let response = { status: 200, body: {} };
+let req = {};
+
 describe('Genre.Controller', () => {
   it('should have Genre contorller', () => {
     expect(Genre).toBeDefined();
@@ -27,26 +30,29 @@ describe('Genre.Controller', () => {
       expect(() => new GenreController(null).create()).toThrow();
     });
 
-    it('should return genre name and id', () => {
+    it.only('should return genre name and id', async () => {
       const expectedGenre = { _id: '1234', name: 'abc' };
 
-      Genre.create = jest.fn().mockReturnValue(expectedGenre);
+      Genre.create = jest.fn().mockResolvedValue(expectedGenre);
 
-      const genre = new GenreController('abc');
-      const createGenre = genre.create();
+      req.body = { name: 'abc' };
+      const createGenre = await GenreController.create(req);
+      response.status = createGenre.status;
 
-      expect(createGenre).toMatchObject(expectedGenre);
+      expect(createGenre).toMatchObject(response);
     });
   });
 
   describe('getAll.method - get all genres', () => {
-    it('should get all the saved genres', () => {
-      const expectedGenre = [{ _id: '1234', name: 'abc' }];
+    it('should get all the saved genres', async () => {
+      const expt = [{ _id: '1234', name: 'abc' }];
 
-      Genre.find = jest.fn().mockReturnValue(expectedGenre);
-      const genres = GenreController.getAll();
+      Genre.find = jest.fn().mockResolvedValue(expt);
 
-      expect(genres).toBe(expectedGenre);
+      const genres = await GenreController.getAll();
+      response.body = expt;
+
+      expect(genres).toMatchObject(response);
     });
   });
 

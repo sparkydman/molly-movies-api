@@ -13,18 +13,21 @@ module.exports = class GenreController {
     this.name = name;
   }
 
-  create() {
-    const validateGenre = validate({ name: this.name });
+  static async create({ body }) {
+    const validateGenre = validate({ name: body.name });
     if (validateGenre.error)
       throw new ErrorResponse(400, validateGenre.error.details[0]);
-    return Genre.create(validateGenre.value);
+
+    const newGenre = await Genre.create(validateGenre.value);
+    return { status: 201, body: newGenre };
   }
-  static getAll() {
-    return Genre.find();
+  static async getAll() {
+    const genres = await Genre.find();
+    return { status: 200, body: genres };
   }
   static async get(obj) {
-      const genre = await Genre.findOne(obj);
-      if (!genre) throw new ErrorResponse(404, 'Genre not found');
-      return genre;
+    const genre = await Genre.findOne(obj);
+    if (!genre) throw new ErrorResponse(404, 'Genre not found');
+    return genre;
   }
 };
