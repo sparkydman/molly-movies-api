@@ -13,11 +13,7 @@ router
 router
   .route('/:genreId')
   .get(objectIdValidation('genreId'), expressWrapper(Controller.get))
-  .put((req, res) => {
-    res.send('update genre');
-  })
-  .delete((req, res) => {
-    res.send('delete genre');
-  });
+  .put(objectIdValidation('genreId'), expressWrapper(Controller.update))
+  .delete(objectIdValidation('genreId'), expressWrapper(Controller.delete));
 
 module.exports = router;

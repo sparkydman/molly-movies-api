@@ -100,4 +100,43 @@ describe('Genre.Controller', () => {
       expect(genre.body).toHaveProperty('name', expect.stringContaining('abc'));
     });
   });
+
+    describe('Update.method - update a genre', () => {
+      it('should return 404 statuscode with wrong genre id', async () => {
+        req.params = { genreId: '1234' };
+        Genre.findOneAndUpdate = jest.fn().mockResolvedValue(null);
+
+        const genre = await GenreController.update(req);
+        expect(genre.status).toBe(404);
+      });
+
+      it('should return 200 statuscode with right genre id ', async () => {
+        req.body = { name: 'New name' };
+        req.params = { genreId: '1234' }
+
+        Genre.findOneAndUpdate = jest.fn().mockResolvedValue(response);
+        
+        const genre = await GenreController.update(req);
+        expect(genre.status).toBe(200);
+      });
+    });
+
+    describe('Delete.method - delete a genre', () => {
+      it('should return 404 statuscode with wrong genre id', async () => {
+        req.params = { genreId: '1234' };
+        Genre.findOneAndDelete = jest.fn().mockResolvedValue(null);
+
+        const genre = await GenreController.delete(req);
+        expect(genre.status).toBe(404);
+      });
+
+      it('should return 200 statuscode with right genre id ', async () => {
+        req.params = { genreId: '1234' };
+
+        Genre.findOneAndUpdate = jest.fn().mockResolvedValue(response);
+
+        const genre = await GenreController.update(req);
+        expect(genre.status).toBe(200);
+      });
+    });
 });
